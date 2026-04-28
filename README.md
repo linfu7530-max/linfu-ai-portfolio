@@ -5,7 +5,7 @@
 
 ## Live Site
 
-- Coming soon: `https://your-vercel-domain.vercel.app`
+- `https://linfu-ai-portfolio.vercel.app/`
 
 ## About
 
