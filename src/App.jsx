@@ -91,7 +91,7 @@ const insights = [
 const copy = {
   zh: {
     brand: "LINFU / AI SALES DESIGNER",
-    nav: { about: "关于", projects: "项目", insights: "洞察", contact: "联系" },
+    nav: { about: "职业画像", projects: "项目", insights: "洞察", contact: "联系" },
     aboutTag: "AI 设计师 / 销售经验",
     title1: "我是 Linfu，一名 AI 设计师。",
     title2: "把 7 年电话车险销售经验，转化成更能成交的 AI 产品体验。",
