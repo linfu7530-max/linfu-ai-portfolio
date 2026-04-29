@@ -161,20 +161,16 @@ const profile = {
 
 const boardModules = {
   about: {
-    clipPath: "polygon(6% 0, 100% 0, 94% 100%, 0 92%)",
-    spanClass: "col-span-3 row-span-2",
+    spanClass: "col-span-3 row-span-1",
   },
   projects: {
-    clipPath: "polygon(0 8%, 92% 0, 100% 92%, 8% 100%)",
     spanClass: "col-span-3 row-span-1",
   },
   insights: {
-    clipPath: "polygon(10% 0, 100% 12%, 90% 100%, 0 88%)",
-    spanClass: "col-span-2 row-span-1",
+    spanClass: "col-span-3 row-span-1",
   },
   contact: {
-    clipPath: "polygon(0 0, 94% 8%, 100% 100%, 8% 92%)",
-    spanClass: "col-span-4 row-span-1",
+    spanClass: "col-span-3 row-span-1",
   },
 };
 
@@ -259,7 +255,6 @@ function HomePage() {
                   className={`group relative flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-900/70 text-lg font-medium text-zinc-100 transition duration-200 hover:border-indigo-400 hover:text-white ${
                     boardConfig.spanClass
                   } ${isDragging ? "scale-95 opacity-60" : "cursor-grab active:cursor-grabbing"}`}
-                  style={{ clipPath: boardConfig.clipPath }}
                 >
                   <span className="pointer-events-none">{label}</span>
                 </button>
