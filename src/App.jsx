@@ -1,4 +1,4 @@
-import { Link, Route, Routes, useParams, useSearchParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
 const projects = [
@@ -182,7 +182,7 @@ function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [boardOrder, setBoardOrder] = useState(["about", "projects", "insights", "contact"]);
   const [draggingBoard, setDraggingBoard] = useState(null);
-  const [selectedBoard, setSelectedBoard] = useState(null);
+  const navigate = useNavigate();
   const lang = searchParams.get("lang") === "en" ? "en" : "zh";
   const t = copy[lang];
 
@@ -250,7 +250,7 @@ function HomePage() {
                   key={key}
                   type="button"
                   draggable
-                  onClick={() => setSelectedBoard(key)}
+                  onClick={() => navigate(`/workspace/${key}?lang=${lang}`)}
                   onDragStart={() => setDraggingBoard(key)}
                   onDragOver={(event) => handleBoardDragOver(event, key)}
                   onDrop={() => setDraggingBoard(null)}
@@ -268,137 +268,152 @@ function HomePage() {
           </div>
         </section>
 
-        {selectedBoard === "about" ? (
-          <section id="about" className="space-y-6 border-b border-zinc-800 pb-14 pt-10">
-          <div className="flex items-center gap-4">
-            {profile.avatarUrl ? (
-              <img
-                src={profile.avatarUrl}
-                alt={profile.displayName}
-                className="h-16 w-16 rounded-full border border-zinc-700 object-cover"
-              />
-            ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-lg font-semibold text-zinc-200">
-                {profile.avatarText}
-              </div>
-            )}
-            <div>
-              <p className="text-lg font-medium text-zinc-100">{profile.displayName}</p>
-              <p className="text-sm text-zinc-500">{t.roleTagline}</p>
-            </div>
-          </div>
-          <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">{t.aboutTag}</p>
-          <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
-            {t.title1}
-            <span className="block text-zinc-400">{t.title2}</span>
-          </h1>
-          <p className="max-w-3xl text-base leading-relaxed text-zinc-400 sm:text-lg">{t.aboutBody}</p>
-          <p className="max-w-3xl text-sm text-zinc-500">{profile.englishTagline}</p>
-          <div className="flex flex-wrap gap-3 pt-1">
-            <a
-              href={profile.resumeUrl}
-              className="inline-flex items-center rounded-full bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 transition hover:bg-white"
-            >
-              {t.downloadResume}
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center rounded-full border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
-            >
-              {t.wechatContact}
-            </a>
-          </div>
-          </section>
-        ) : null}
+      </main>
+    </div>
+  );
+}
 
-        {selectedBoard === "projects" ? (
-          <section id="projects" className="py-14">
-          <div className="mb-8 flex items-end justify-between">
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.selectedProjects}</h2>
-            <span className="text-xs uppercase tracking-[0.18em] text-zinc-500">{t.salesAi}</span>
+function WorkspacePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lang = searchParams.get("lang") === "en" ? "en" : "zh";
+  const t = copy[lang];
+  const { sectionKey } = useParams();
+
+  const setLang = (nextLang) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("lang", nextLang);
+    setSearchParams(next);
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <main className="mx-auto w-full max-w-5xl px-6 pb-20 pt-10 md:px-10">
+        <header className="mb-10 flex items-center justify-between border-b border-zinc-800 pb-6">
+          <Link to={`/?lang=${lang}`} className="text-sm text-zinc-300 underline underline-offset-4 hover:text-white">
+            ← {t.backHome}
+          </Link>
+          <div className="flex rounded-lg border border-zinc-700 p-1 text-xs">
+            <button
+              type="button"
+              onClick={() => setLang("zh")}
+              className={`rounded px-2 py-1 transition ${lang === "zh" ? "bg-zinc-100 text-zinc-900" : "text-zinc-400 hover:text-zinc-100"}`}
+            >
+              中
+            </button>
+            <button
+              type="button"
+              onClick={() => setLang("en")}
+              className={`rounded px-2 py-1 transition ${lang === "en" ? "bg-zinc-100 text-zinc-900" : "text-zinc-400 hover:text-zinc-100"}`}
+            >
+              EN
+            </button>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {projects.map((project) => (
-              <article
-                key={project.slug}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
-              >
-                <h3 className="text-lg font-medium text-zinc-100">{project.name[lang]}</h3>
-                <div className="mt-4 space-y-3 text-sm leading-relaxed">
-                  <p className="text-zinc-300">
-                    <span className="mr-2 inline-block rounded bg-zinc-800 px-2 py-0.5 text-xs uppercase tracking-wide text-zinc-400">
-                      Problem
-                    </span>
-                    {project.problem[lang]}
-                  </p>
-                  <p className="text-zinc-300">
-                    <span className="mr-2 inline-block rounded bg-zinc-800 px-2 py-0.5 text-xs uppercase tracking-wide text-zinc-400">
-                      Solution
-                    </span>
-                    {project.solution[lang]}
-                  </p>
-                  <p className="text-emerald-300">
-                    <span className="mr-2 inline-block rounded bg-emerald-900/40 px-2 py-0.5 text-xs uppercase tracking-wide text-emerald-300">
-                      Result
-                    </span>
-                    {project.result[lang]}
-                  </p>
+        </header>
+
+        {sectionKey === "about" ? (
+          <section id="about" className="space-y-6 border-b border-zinc-800 pb-14 pt-2">
+            <div className="flex items-center gap-4">
+              {profile.avatarUrl ? (
+                <img
+                  src={profile.avatarUrl}
+                  alt={profile.displayName}
+                  className="h-16 w-16 rounded-full border border-zinc-700 object-cover"
+                />
+              ) : (
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-lg font-semibold text-zinc-200">
+                  {profile.avatarText}
                 </div>
-                <p className="mt-4 text-xs uppercase tracking-wide text-zinc-500">{project.stack}</p>
-                <Link
-                  to={`/projects/${project.slug}?lang=${lang}`}
-                  className="mt-5 inline-flex text-sm text-zinc-200 underline underline-offset-4 transition hover:text-white"
+              )}
+              <div>
+                <p className="text-lg font-medium text-zinc-100">{profile.displayName}</p>
+                <p className="text-sm text-zinc-500">{t.roleTagline}</p>
+              </div>
+            </div>
+            <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">{t.aboutTag}</p>
+            <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
+              {t.title1}
+              <span className="block text-zinc-400">{t.title2}</span>
+            </h1>
+            <p className="max-w-3xl text-base leading-relaxed text-zinc-400 sm:text-lg">{t.aboutBody}</p>
+            <p className="max-w-3xl text-sm text-zinc-500">{profile.englishTagline}</p>
+          </section>
+        ) : null}
+
+        {sectionKey === "projects" ? (
+          <section id="projects" className="py-4">
+            <div className="mb-8 flex items-end justify-between">
+              <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.selectedProjects}</h2>
+              <span className="text-xs uppercase tracking-[0.18em] text-zinc-500">{t.salesAi}</span>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {projects.map((project) => (
+                <article
+                  key={project.slug}
+                  className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
                 >
-                  {t.viewDetail}
-                </Link>
-              </article>
-            ))}
-          </div>
+                  <h3 className="text-lg font-medium text-zinc-100">{project.name[lang]}</h3>
+                  <div className="mt-4 space-y-3 text-sm leading-relaxed">
+                    <p className="text-zinc-300">
+                      <span className="mr-2 inline-block rounded bg-zinc-800 px-2 py-0.5 text-xs uppercase tracking-wide text-zinc-400">
+                        Problem
+                      </span>
+                      {project.problem[lang]}
+                    </p>
+                    <p className="text-zinc-300">
+                      <span className="mr-2 inline-block rounded bg-zinc-800 px-2 py-0.5 text-xs uppercase tracking-wide text-zinc-400">
+                        Solution
+                      </span>
+                      {project.solution[lang]}
+                    </p>
+                    <p className="text-emerald-300">
+                      <span className="mr-2 inline-block rounded bg-emerald-900/40 px-2 py-0.5 text-xs uppercase tracking-wide text-emerald-300">
+                        Result
+                      </span>
+                      {project.result[lang]}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </section>
         ) : null}
 
-        {selectedBoard === "insights" ? (
-          <section id="insights" className="border-t border-zinc-800 py-14">
-          <div className="mb-8 flex items-end justify-between">
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.mediaInsights}</h2>
-            <span className="text-xs uppercase tracking-[0.18em] text-zinc-500">{t.thinking}</span>
-          </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {insights.map((item) => (
-              <article
-                key={item.title.en}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
-              >
-                <p className="text-xs uppercase tracking-[0.14em] text-zinc-500">{item.date}</p>
-                <h3 className="mt-3 text-lg font-medium text-zinc-100">{item.title[lang]}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-400">{item.summary[lang]}</p>
-              </article>
-            ))}
-          </div>
+        {sectionKey === "insights" ? (
+          <section id="insights" className="py-4">
+            <div className="mb-8 flex items-end justify-between">
+              <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.mediaInsights}</h2>
+              <span className="text-xs uppercase tracking-[0.18em] text-zinc-500">{t.thinking}</span>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {insights.map((item) => (
+                <article
+                  key={item.title.en}
+                  className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
+                >
+                  <p className="text-xs uppercase tracking-[0.14em] text-zinc-500">{item.date}</p>
+                  <h3 className="mt-3 text-lg font-medium text-zinc-100">{item.title[lang]}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-zinc-400">{item.summary[lang]}</p>
+                </article>
+              ))}
+            </div>
           </section>
         ) : null}
 
-        {selectedBoard === "contact" ? (
-          <section id="contact" className="border-t border-zinc-800 pt-10">
-          <p className="text-sm text-zinc-500">{t.openTo}</p>
-          <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{t.cta}</h2>
-          <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-zinc-400">
-            <span className="rounded-full border border-zinc-700 px-3 py-1 text-zinc-300">
-              {t.wechatHint.replace("linfu7530", profile.wechatId)}
-            </span>
-            <a href="mailto:linfu7530@gmail.com" className="transition hover:text-zinc-100">
-              linfu7530@gmail.com
-            </a>
-            <a href="https://github.com/linfu7530-max" target="_blank" rel="noreferrer" className="transition hover:text-zinc-100">
-              GitHub
-            </a>
-          </div>
-          <a
-            href="mailto:linfu7530@gmail.com"
-            className="mt-6 inline-flex rounded-full bg-zinc-100 px-5 py-2.5 text-sm font-medium text-zinc-900 transition hover:bg-white"
-          >
-            {t.quickTalk}
-          </a>
+        {sectionKey === "contact" ? (
+          <section id="contact" className="py-4">
+            <p className="text-sm text-zinc-500">{t.openTo}</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{t.cta}</h2>
+            <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-zinc-400">
+              <span className="rounded-full border border-zinc-700 px-3 py-1 text-zinc-300">
+                {t.wechatHint.replace("linfu7530", profile.wechatId)}
+              </span>
+              <a href="mailto:linfu7530@gmail.com" className="transition hover:text-zinc-100">
+                linfu7530@gmail.com
+              </a>
+              <a href="https://github.com/linfu7530-max" target="_blank" rel="noreferrer" className="transition hover:text-zinc-100">
+                GitHub
+              </a>
+            </div>
           </section>
         ) : null}
       </main>
@@ -487,6 +502,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/workspace/:sectionKey" element={<WorkspacePage />} />
       <Route path="/projects/:slug" element={<ProjectDetailPage />} />
     </Routes>
   );
