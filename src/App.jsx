@@ -1,4 +1,5 @@
 import { Link, Route, Routes, useParams, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 const projects = [
   {
@@ -110,6 +111,12 @@ const copy = {
     wechatContact: "微信联系",
     quickTalk: "快速沟通",
     wechatHint: "微信：linfu7530（可改）",
+    modulesTitle: "核心板块",
+    modulesDesc: "鼠标移动到卡片会有动态晃动，点击卡片可查看下一步动作。",
+    nextStepTitle: "下一步展示",
+    enterModule: "进入板块",
+    closePanel: "关闭",
+    panelTitle: "板块详情流程",
   },
   en: {
     brand: "LINFU / AI SALES DESIGNER",
@@ -133,6 +140,12 @@ const copy = {
     wechatContact: "WeChat Contact",
     quickTalk: "Quick chat",
     wechatHint: "WeChat: linfu7530 (editable)",
+    modulesTitle: "Core Sections",
+    modulesDesc: "Cards react to your cursor. Click any section to reveal the next step plan.",
+    nextStepTitle: "Next Step",
+    enterModule: "Open Module",
+    closePanel: "Close",
+    panelTitle: "Module Detail Flow",
   },
 };
 
@@ -146,8 +159,50 @@ const profile = {
   wechatId: "linfu7530",
 };
 
+const sectionModules = [
+  {
+    slug: "discovery",
+    title: { zh: "需求洞察", en: "Discovery" },
+    summary: {
+      zh: "梳理销售场景中的真实问题，定位优先级最高的机会点。",
+      en: "Map real sales pain points and prioritize high-impact opportunities.",
+    },
+    nextSteps: {
+      zh: ["访谈一线销售与主管", "梳理客户旅程阻力点", "明确可量化目标指标"],
+      en: ["Interview frontline reps and managers", "Map friction across the customer journey", "Define measurable outcome metrics"],
+    },
+  },
+  {
+    slug: "design",
+    title: { zh: "产品设计", en: "Design" },
+    summary: {
+      zh: "把策略转成 AI 产品流程、界面和可执行的交互方案。",
+      en: "Turn strategy into AI workflows, interfaces, and executable interaction designs.",
+    },
+    nextSteps: {
+      zh: ["设计对话与任务流程", "完成高保真原型验证", "建立可复用组件规范"],
+      en: ["Design conversation and task flows", "Validate with high-fidelity prototypes", "Build reusable component standards"],
+    },
+  },
+  {
+    slug: "growth",
+    title: { zh: "增长验证", en: "Growth" },
+    summary: {
+      zh: "上线后持续跟踪数据，迭代策略并提升销售转化效率。",
+      en: "Track post-launch data, iterate strategy, and improve conversion efficiency.",
+    },
+    nextSteps: {
+      zh: ["搭建复盘看板", "运行 A/B 测试与复训", "按结果滚动优化体验"],
+      en: ["Build review dashboards", "Run A/B tests and retraining loops", "Iterate experience by outcomes"],
+    },
+  },
+];
+
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [activeModule, setActiveModule] = useState(sectionModules[0].slug);
+  const [hoverMotion, setHoverMotion] = useState({});
+  const [modulePanelOpen, setModulePanelOpen] = useState(false);
   const lang = searchParams.get("lang") === "en" ? "en" : "zh";
   const t = copy[lang];
 
@@ -156,6 +211,19 @@ function HomePage() {
     next.set("lang", nextLang);
     setSearchParams(next);
   };
+
+  const handleCardMouseMove = (event, slug) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    setHoverMotion((prev) => ({ ...prev, [slug]: { x, y } }));
+  };
+
+  const handleCardMouseLeave = (slug) => {
+    setHoverMotion((prev) => ({ ...prev, [slug]: { x: 0, y: 0 } }));
+  };
+
+  const selectedModule = sectionModules.find((item) => item.slug === activeModule) ?? sectionModules[0];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -238,6 +306,84 @@ function HomePage() {
             </a>
           </div>
         </section>
+
+        <section id="modules" className="border-b border-zinc-800 py-14">
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.modulesTitle}</h2>
+            <p className="mt-3 text-sm text-zinc-400">{t.modulesDesc}</p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {sectionModules.map((module) => {
+              const motion = hoverMotion[module.slug] ?? { x: 0, y: 0 };
+              const isActive = activeModule === module.slug;
+              return (
+                <button
+                  key={module.slug}
+                  type="button"
+                  onClick={() => {
+                    setActiveModule(module.slug);
+                    setModulePanelOpen(true);
+                  }}
+                  onMouseMove={(event) => handleCardMouseMove(event, module.slug)}
+                  onMouseLeave={() => handleCardMouseLeave(module.slug)}
+                  className={`rounded-2xl border p-5 text-left transition duration-200 ${
+                    isActive
+                      ? "border-indigo-400/70 bg-zinc-900 shadow-lg shadow-indigo-900/30"
+                      : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-600"
+                  }`}
+                  style={{
+                    transform: `perspective(700px) rotateX(${-motion.y * 8}deg) rotateY(${motion.x * 8}deg) translateY(-2px)`,
+                  }}
+                >
+                  <h3 className="text-lg font-medium text-zinc-100">{module.title[lang]}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-zinc-400">{module.summary[lang]}</p>
+                  <span className="mt-4 inline-flex text-xs text-indigo-300">{t.enterModule} →</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
+            <p className="text-xs uppercase tracking-[0.14em] text-zinc-500">{t.nextStepTitle}</p>
+            <h3 className="mt-2 text-lg font-medium text-zinc-100">{selectedModule.title[lang]}</h3>
+            <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+              {selectedModule.nextSteps[lang].map((step) => (
+                <li key={step} className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-400" />
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {modulePanelOpen ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/85 p-4 backdrop-blur-sm">
+            <div className="w-full max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-xs uppercase tracking-[0.14em] text-zinc-500">{t.panelTitle}</p>
+                <button
+                  type="button"
+                  onClick={() => setModulePanelOpen(false)}
+                  className="rounded border border-zinc-600 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-400 hover:text-zinc-100"
+                >
+                  {t.closePanel}
+                </button>
+              </div>
+              <h3 className="mt-3 text-2xl font-semibold text-zinc-100">{selectedModule.title[lang]}</h3>
+              <p className="mt-2 text-sm text-zinc-400">{selectedModule.summary[lang]}</p>
+              <div className="mt-5 space-y-3">
+                {selectedModule.nextSteps[lang].map((step, index) => (
+                  <div key={step} className="rounded-xl border border-zinc-700 bg-zinc-950/50 p-4">
+                    <p className="text-xs uppercase tracking-[0.14em] text-indigo-300">
+                      Step {index + 1}
+                    </p>
+                    <p className="mt-1 text-sm text-zinc-200">{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <section id="projects" className="py-14">
           <div className="mb-8 flex items-end justify-between">
