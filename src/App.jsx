@@ -1,5 +1,5 @@
 import { Link, Route, Routes, useParams, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const projects = [
   {
@@ -198,11 +198,32 @@ const sectionModules = [
   },
 ];
 
+const boardModules = {
+  about: {
+    clipPath: "polygon(6% 0, 100% 0, 94% 100%, 0 92%)",
+    spanClass: "col-span-3 row-span-2",
+  },
+  projects: {
+    clipPath: "polygon(0 8%, 92% 0, 100% 92%, 8% 100%)",
+    spanClass: "col-span-3 row-span-1",
+  },
+  insights: {
+    clipPath: "polygon(10% 0, 100% 12%, 90% 100%, 0 88%)",
+    spanClass: "col-span-2 row-span-1",
+  },
+  contact: {
+    clipPath: "polygon(0 0, 94% 8%, 100% 100%, 8% 92%)",
+    spanClass: "col-span-4 row-span-1",
+  },
+};
+
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeModule, setActiveModule] = useState(sectionModules[0].slug);
   const [hoverMotion, setHoverMotion] = useState({});
   const [modulePanelOpen, setModulePanelOpen] = useState(false);
+  const [boardOrder, setBoardOrder] = useState(["about", "projects", "insights", "contact"]);
+  const [draggingBoard, setDraggingBoard] = useState(null);
   const lang = searchParams.get("lang") === "en" ? "en" : "zh";
   const t = copy[lang];
 
@@ -225,6 +246,38 @@ function HomePage() {
 
   const selectedModule = sectionModules.find((item) => item.slug === activeModule) ?? sectionModules[0];
 
+  const handleBoardDragOver = (event, targetKey) => {
+    event.preventDefault();
+    if (!draggingBoard || draggingBoard === targetKey) return;
+
+    setBoardOrder((prev) => {
+      const from = prev.indexOf(draggingBoard);
+      const to = prev.indexOf(targetKey);
+      if (from < 0 || to < 0) return prev;
+      const next = [...prev];
+      next.splice(from, 1);
+      next.splice(to, 0, draggingBoard);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setModulePanelOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = modulePanelOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modulePanelOpen]);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <main className="mx-auto w-full max-w-5xl px-6 pb-20 pt-10 md:px-10">
@@ -233,20 +286,7 @@ function HomePage() {
             {t.brand}
           </a>
           <div className="flex items-center gap-4">
-            <nav className="hidden gap-6 text-sm text-zinc-400 md:flex">
-              <a href="#about" className="transition hover:text-zinc-100">
-                {t.nav.about}
-              </a>
-              <a href="#projects" className="transition hover:text-zinc-100">
-                {t.nav.projects}
-              </a>
-              <a href="#insights" className="transition hover:text-zinc-100">
-                {t.nav.insights}
-              </a>
-              <a href="#contact" className="transition hover:text-zinc-100">
-                {t.nav.contact}
-              </a>
-            </nav>
+            <span className="hidden text-sm text-zinc-500 md:inline">Drag & Snap Layout</span>
             <div className="flex rounded-lg border border-zinc-700 p-1 text-xs">
               <button
                 type="button"
@@ -265,6 +305,38 @@ function HomePage() {
             </div>
           </div>
         </header>
+
+        <section className="border-b border-zinc-800 pb-14">
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-white sm:text-3xl">Interactive Sections</h2>
+            <p className="mt-2 text-sm text-zinc-400">拖动任意板块，其他板块会自动补位；松开后自动规整吸附。</p>
+          </div>
+          <div className="grid grid-flow-dense auto-rows-[110px] grid-cols-2 gap-3 md:auto-rows-[120px] md:grid-cols-6 md:gap-4">
+            {boardOrder.map((key) => {
+              const boardConfig = boardModules[key];
+              const label = t.nav[key];
+              const isDragging = draggingBoard === key;
+
+              return (
+                <a
+                  key={key}
+                  href={`#${key}`}
+                  draggable
+                  onDragStart={() => setDraggingBoard(key)}
+                  onDragOver={(event) => handleBoardDragOver(event, key)}
+                  onDrop={() => setDraggingBoard(null)}
+                  onDragEnd={() => setDraggingBoard(null)}
+                  className={`group relative flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-900/70 text-lg font-medium text-zinc-100 transition duration-200 hover:border-indigo-400 hover:text-white ${
+                    boardConfig.spanClass
+                  } ${isDragging ? "scale-95 opacity-60" : "cursor-grab active:cursor-grabbing"}`}
+                  style={{ clipPath: boardConfig.clipPath }}
+                >
+                  <span className="pointer-events-none">{label}</span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
 
         <section id="about" className="space-y-6 border-b border-zinc-800 pb-14">
           <div className="flex items-center gap-4">
@@ -326,13 +398,13 @@ function HomePage() {
                   }}
                   onMouseMove={(event) => handleCardMouseMove(event, module.slug)}
                   onMouseLeave={() => handleCardMouseLeave(module.slug)}
-                  className={`rounded-2xl border p-5 text-left transition duration-200 ${
+                  className={`rounded-2xl border p-5 text-left transition duration-200 will-change-transform active:scale-[0.99] ${
                     isActive
-                      ? "border-indigo-400/70 bg-zinc-900 shadow-lg shadow-indigo-900/30"
+                      ? "border-indigo-400/70 bg-zinc-900 shadow-lg shadow-indigo-900/30 md:-translate-y-0.5"
                       : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-600"
                   }`}
                   style={{
-                    transform: `perspective(700px) rotateX(${-motion.y * 8}deg) rotateY(${motion.x * 8}deg) translateY(-2px)`,
+                    transform: `perspective(700px) rotateX(${-motion.y * 6}deg) rotateY(${motion.x * 6}deg)`,
                   }}
                 >
                   <h3 className="text-lg font-medium text-zinc-100">{module.title[lang]}</h3>
@@ -357,8 +429,14 @@ function HomePage() {
         </section>
 
         {modulePanelOpen ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/85 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/85 p-4 backdrop-blur-sm"
+            onClick={() => setModulePanelOpen(false)}
+          >
+            <div
+              className="w-full max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
               <div className="flex items-center justify-between gap-4">
                 <p className="text-xs uppercase tracking-[0.14em] text-zinc-500">{t.panelTitle}</p>
                 <button
