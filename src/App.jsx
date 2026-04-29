@@ -162,15 +162,19 @@ const profile = {
 const boardModules = {
   about: {
     spanClass: "col-span-3 row-span-1",
+    toneClass: "bg-slate-800/70 hover:bg-slate-700/70",
   },
   projects: {
     spanClass: "col-span-3 row-span-1",
+    toneClass: "bg-indigo-900/40 hover:bg-indigo-800/50",
   },
   insights: {
     spanClass: "col-span-3 row-span-1",
+    toneClass: "bg-teal-900/35 hover:bg-teal-800/45",
   },
   contact: {
     spanClass: "col-span-3 row-span-1",
+    toneClass: "bg-amber-900/30 hover:bg-amber-800/40",
   },
 };
 
@@ -234,7 +238,6 @@ function HomePage() {
         <section className="border-b border-zinc-800 pb-14">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">Interactive Sections</h2>
-            <p className="mt-2 text-sm text-zinc-400">拖动任意板块，其他板块会自动补位；松开后自动规整吸附。</p>
           </div>
           <div className="grid grid-flow-dense auto-rows-[110px] grid-cols-2 gap-3 md:auto-rows-[120px] md:grid-cols-6 md:gap-4">
             {boardOrder.map((key) => {
@@ -252,8 +255,10 @@ function HomePage() {
                   onDragOver={(event) => handleBoardDragOver(event, key)}
                   onDrop={() => setDraggingBoard(null)}
                   onDragEnd={() => setDraggingBoard(null)}
-                  className={`group relative flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-900/70 text-lg font-medium text-zinc-100 transition duration-200 hover:border-indigo-400 hover:text-white ${
+                  className={`group relative flex items-center justify-center rounded-2xl border border-zinc-700 text-lg font-medium text-zinc-100 transition duration-200 hover:border-indigo-400 hover:text-white ${
                     boardConfig.spanClass
+                  } ${boardConfig.toneClass} ${
+                    isDragging ? "ring-2 ring-indigo-300/40" : ""
                   } ${isDragging ? "scale-95 opacity-60" : "cursor-grab active:cursor-grabbing"}`}
                 >
                   <span className="pointer-events-none">{label}</span>
