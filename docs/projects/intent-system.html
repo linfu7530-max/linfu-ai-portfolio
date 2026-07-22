@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case study: intent classification for an auto-insurance AI customer support system." />
+  <title>Insurance Support Intent Classification | Linbing Zhang</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <main>
+    <section class="case-hero section-pad">
+      <a class="case-back" href="../index.html#work">← Back to selected work</a>
+      <p class="case-label reveal">CASE 03 / NLP & CUSTOMER SERVICE</p>
+      <h1 class="reveal">Auto-Insurance Support<br />Intent Classification</h1>
+      <div class="case-summary reveal">
+        <p>Built a customer-intent system for PICC’s auto-insurance AI support workflow, covering business classification, knowledge matching, clarification prompts, and human escalation for complex inquiries.</p>
+        <div class="case-fact"><small>My role</small><strong>Taxonomy & Rule Lead</strong></div>
+        <div class="case-fact"><small>Core scenarios</small><strong>8 Categories</strong></div>
+        <div class="case-fact"><small>Modality</small><strong>Text Dialogue</strong></div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">01 / Business Problem</div>
+      <div class="case-content reveal">
+        <h2>One question can lead<br />to very different workflows.</h2>
+        <p>Insurance questions often contain hidden intent. A renewal inquiry may include product comparison; a policy lookup may actually ask about the purchase process; a routine question may develop into a complaint or claims dispute. Misclassification affects the answer and can prevent high-risk cases from reaching a human agent.</p>
+        <div class="case-grid">
+          <article class="case-block"><b>CONFUSION</b><h3>Renewal vs product inquiry</h3><p>When price and coverage appear together, the system must identify the primary need and context.</p></article>
+          <article class="case-block"><b>PROCESS</b><h3>Lookup vs purchase process</h3><p>Separate existing-policy queries from questions about buying a new policy.</p></article>
+          <article class="case-block"><b>RISK</b><h3>Routine inquiry vs dispute</h3><p>Detect complaints and claims disputes that require escalation.</p></article>
+          <article class="case-block"><b>ANSWER</b><h3>Knowledge match vs clarification</h3><p>When information is missing, gather critical slots instead of forcing an answer match.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">02 / Taxonomy Design</div>
+      <div class="case-content reveal">
+        <h2>Identify not only the question,<br />but the next action.</h2>
+        <p>I led the rule documentation and designed a multilayer taxonomy connecting core intent to execution strategy, giving each data item value for business routing, risk decisions, and answer handling.</p>
+        <div class="flow">
+          <div><strong>01</strong><span>Core intent</span><small>Policy / purchase / renewal / product / fees</small></div>
+          <div><strong>02</strong><span>Key information</span><small>Vehicle, policy, timing, coverage, and customer need</small></div>
+          <div><strong>03</strong><span>Risk and routing</span><small>Risk level, rejection, clarification, or human handoff</small></div>
+          <div><strong>04</strong><span>Answer source</span><small>Knowledge-base entry and standard-response matching</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">03 / Production Loop</div>
+      <div class="case-content reveal">
+        <h2>Rules are not written once.<br />They mature through disagreement.</h2>
+        <p>The program covered requirement intake, scenario decomposition, taxonomy design, rule documentation, pilot annotation, production annotation, sampled QA, and bad-case capture. Each pilot disagreement was classified as a boundary issue, data gap, or interpretation gap and fed into the next rule version.</p>
+        <div class="case-grid">
+          <article class="case-block"><b>POSITIVE / NEGATIVE</b><h3>Comparable boundaries</h3><p>Pair label definitions with counterexamples that look similar but do not belong.</p></article>
+          <article class="case-block"><b>ADJUDICATION</b><h3>Consistent high-risk decisions</h3><p>Concentrated review for complaints, claims disputes, and human-handoff samples.</p></article>
+          <article class="case-block"><b>ROOT CAUSE</b><h3>Prevent recurring errors</h3><p>Added rules and similar samples for renewal mislabels and knowledge-matching failures.</p></article>
+          <article class="case-block"><b>STANDARD RESPONSE</b><h3>Connect intent to action</h3><p>Linked labels to knowledge sources, standard responses, and handling strategies.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section impact">
+      <div class="case-section-number">04 / Quality Targets</div>
+      <div class="case-content reveal">
+        <h2>Every decision layer<br />needs its own quality metric.</h2>
+        <p>These figures are program quality targets for annotation, intent classification, answer matching, and risk routing. They are not presented as unverified final results.</p>
+        <div class="impact-numbers">
+          <div><strong>95%+</strong><span>Overall annotation QA pass-rate target</span></div>
+          <div><strong>92%+</strong><span>Intent classification accuracy target</span></div>
+          <div><strong>90%+</strong><span>Knowledge / standard-answer match target</span></div>
+        </div>
+      </div>
+    </section>
+
+    <a class="case-next" href="../index.html#contact"><span>End of selected work</span><strong>Discuss an AI Data Program ↗</strong></a>
+  </main>
+  <script src="../assets/script.js"></script>
+</body>
+</html>

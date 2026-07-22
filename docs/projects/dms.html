@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case study: in-cabin DMS driver-state recognition data operations." />
+  <title>DMS Driver-State Recognition | Linbing Zhang</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <main>
+    <section class="case-hero section-pad">
+      <a class="case-back" href="../index.html#work">← Back to selected work</a>
+      <p class="case-label reveal">CASE 01 / COMPUTER VISION</p>
+      <h1 class="reveal">In-Cabin DMS<br />Driver-State Recognition</h1>
+      <div class="case-summary reveal">
+        <p>Used in-cabin image and video data to identify fatigue, distraction, phone use, smoking, and other risky behaviors—creating a trainable and reviewable data foundation for vehicle safety alerts.</p>
+        <div class="case-fact"><small>My role</small><strong>Data Operations / Team Lead</strong></div>
+        <div class="case-fact"><small>Team</small><strong>7 Annotators + 3 QA</strong></div>
+        <div class="case-fact"><small>Scale</small><strong>420K Images / Frames</strong></div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">01 / Challenge</div>
+      <div class="case-content reveal">
+        <h2>Similar actions create<br />ambiguous label boundaries.</h2>
+        <p>Risk behaviors in DMS footage rarely appear as clean textbook poses. A hand resting on the face can resemble a phone call; checking the instrument panel can resemble looking at a phone; drinking can resemble smoking. Low light, occlusion, and profile views amplify disagreement.</p>
+        <div class="case-grid">
+          <article class="case-block"><b>AMBIGUITY</b><h3>Overlapping actions</h3><p>Similar hand positions, head poses, and gaze directions create label confusion.</p></article>
+          <article class="case-block"><b>ENVIRONMENT</b><h3>Real-world interference</h3><p>Night scenes, facial occlusion, and profile views reduce sample decidability.</p></article>
+          <article class="case-block"><b>CONSISTENCY</b><h3>Reviewer disagreement</h3><p>A ten-person operation needs one shared standard or small biases scale with the dataset.</p></article>
+          <article class="case-block"><b>PRIORITY</b><h3>Recall on high-risk behavior</h3><p>Phone use, downward gaze, and closed-eye fatigue require special attention to missed positives.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">02 / Strategy</div>
+      <div class="case-content reveal">
+        <h2>Turn every disagreement<br />into a shared rule.</h2>
+        <p>I owned annotation and QA allocation, delivery tracking, standard alignment, and issue reviews. For recurring disputes, I added negative examples and specialized dimensions so the team understood both what to label and why a sample should not receive a competing label.</p>
+        <div class="flow">
+          <div><strong>01</strong><span>Core taxonomy</span><small>Normal / fatigue / phone gaze / calling / smoking</small></div>
+          <div><strong>02</strong><span>Pilot calibration</span><small>Expose interpretation gaps and boundary disputes early</small></div>
+          <div><strong>03</strong><span>Layered QA</span><small>Annotation / sampling / review / adjudication</small></div>
+          <div><strong>04</strong><span>Bad-case feedback</span><small>Add negative examples, hard cases, and boundary rules</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">03 / Deliverables</div>
+      <div class="case-content reveal">
+        <h2>Not just a dataset.<br />A quality operating system.</h2>
+        <div class="case-grid">
+          <article class="case-block"><b>TAXONOMY</b><h3>Core labels + specialist dimensions</h3><p>Added gaze deviation, both hands off the wheel, occlusion, and uncertainty dimensions.</p></article>
+          <article class="case-block"><b>HARD-CASE RULES</b><h3>Negative examples for similar actions</h3><p>Defined exclusions for face-touching, checking the dashboard, drinking, and other confusing behaviors.</p></article>
+          <article class="case-block"><b>OPERATING MODEL</b><h3>Annotation–QA–adjudication loop</h3><p>Set capacity targets by image and video task type and tracked mislabels, misses, and disputed samples.</p></article>
+          <article class="case-block"><b>DATA VALUE</b><h3>Support for real driving conditions</h3><p>Improved the data foundation for low light, occlusion, profile views, and visually similar actions.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section impact">
+      <div class="case-section-number">04 / Program Metrics</div>
+      <div class="case-content reveal">
+        <h2>Use targets to define<br />the direction of quality.</h2>
+        <p>The figures below are the baseline and targets recorded in the resume. They represent the program’s optimization direction—not unverified final outcomes.</p>
+        <div class="impact-numbers">
+          <div><strong>420K</strong><span>Image / frame-level data items progressed</span></div>
+          <div><strong>85%</strong><span>Initial overall accuracy baseline</span></div>
+          <div><strong>90%+</strong><span>Overall accuracy target after rule refinement</span></div>
+        </div>
+      </div>
+    </section>
+
+    <a class="case-next" href="voice-evaluation.html"><span>Next case / 02</span><strong>AI Voice Model Benchmark ↗</strong></a>
+  </main>
+  <script src="../assets/script.js"></script>
+</body>
+</html>

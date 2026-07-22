@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case study: a three-model benchmark for consumer AI voice calls." />
+  <title>AI Voice Model Benchmark | Linbing Zhang</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <main>
+    <section class="case-hero section-pad">
+      <a class="case-back" href="../index.html#work">← Back to selected work</a>
+      <p class="case-label reveal">CASE 02 / MODEL EVALUATION</p>
+      <h1 class="reveal">AI Voice Calls<br />Three-Model Benchmark</h1>
+      <div class="case-summary reveal">
+        <p>Benchmarked Doubao, ERNIE Bot, and iFlytek Spark on the same voice-call samples, establishing one scoring standard to support model selection for an in-vehicle voice assistant.</p>
+        <div class="case-fact"><small>My role</small><strong>Evaluation Lead</strong></div>
+        <div class="case-fact"><small>Team</small><strong>4 Evaluators</strong></div>
+        <div class="case-fact"><small>Scope</small><strong>3 Models</strong></div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">01 / Evaluation Brief</div>
+      <div class="case-content reveal">
+        <h2>Different strengths.<br />One shared yardstick.</h2>
+        <p>The models differed in response style, context retention, and safety behavior. The program needed a repeatable, explainable evaluation method that compared performance on identical samples instead of relying on subjective impressions.</p>
+        <div class="case-grid">
+          <article class="case-block"><b>MODEL</b><h3>Doubao</h3><p>Observed overall stability across routine and difficult scenarios.</p></article>
+          <article class="case-block"><b>MODEL</b><h3>ERNIE Bot</h3><p>Focused on response usefulness, instruction understanding, and information completeness.</p></article>
+          <article class="case-block"><b>MODEL</b><h3>iFlytek Spark</h3><p>Focused on recognition and response stability in complex scenarios.</p></article>
+          <article class="case-block"><b>SCENARIOS</b><h3>Routine + complex</h3><p>Used two difficulty tiers to observe performance as constraints increased.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">02 / Evaluation Framework</div>
+      <div class="case-content reveal">
+        <h2>From understanding the request<br />to delivering a useful answer.</h2>
+        <p>I defined the model set, scenario difficulty, scoring dimensions, and composite-score logic, then coordinated evaluators using transcribed prompts and model responses under one rubric.</p>
+        <div class="flow">
+          <div><strong>01</strong><span>Comprehension</span><small>Recognizes true intent and critical constraints</small></div>
+          <div><strong>02</strong><span>Correctness</span><small>Accurate, complete, and actionable information</small></div>
+          <div><strong>03</strong><span>Experience</span><small>Context retention, naturalness, and concision</small></div>
+          <div><strong>04</strong><span>Safety boundaries</span><small>Sensitive topics, safe refusal, and risk control</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="case-section-number">03 / Bad-Case Analysis</div>
+      <div class="case-content reveal">
+        <h2>A low score is not the conclusion.<br />Its cause is the optimization entry point.</h2>
+        <div class="case-grid">
+          <article class="case-block"><b>CONTEXT</b><h3>Lost conversational context</h3><p>Ignored earlier turns in multi-turn calls, producing repetitive or off-target answers.</p></article>
+          <article class="case-block"><b>CONSTRAINT</b><h3>Missed negation and constraints</h3><p>Misread negative wording or dropped conditions from complex instructions.</p></article>
+          <article class="case-block"><b>USEFULNESS</b><h3>Generic responses</h3><p>Produced polished language without information that actually solved the user’s problem.</p></article>
+          <article class="case-block"><b>SAFETY</b><h3>Weak sensitive-topic handling</h3><p>Applied inconsistent response strategies to risky or sensitive requests.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section impact">
+      <div class="case-section-number">04 / Output</div>
+      <div class="case-content reveal">
+        <h2>Turn subjective experience<br />into selection evidence.</h2>
+        <p>The program produced a three-model evaluation guide, dimension-level scores, a composite ranking, and categorized optimization recommendations. Doubao was the most stable overall; ERNIE Bot showed weaknesses in response usefulness; iFlytek Spark was less stable in complex recognition and response scenarios.</p>
+        <div class="impact-numbers">
+          <div><strong>3</strong><span>Major models tested consistently</span></div>
+          <div><strong>4</strong><span>Core evaluation dimensions</span></div>
+          <div><strong>2</strong><span>Scenario difficulty tiers</span></div>
+        </div>
+      </div>
+    </section>
+
+    <a class="case-next" href="intent-system.html"><span>Next case / 03</span><strong>Insurance Support Intent System ↗</strong></a>
+  </main>
+  <script src="../assets/script.js"></script>
+</body>
+</html>
